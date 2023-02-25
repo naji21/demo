@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="common/layout">
+      
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+<title>404 PAGE NOT FOUND</title>
+<!-- Google font -->
+<link href="https://fonts.googleapis.com/css?family=Fredoka+One" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Raleway:400,700" rel="stylesheet">
+
+<!-- Custom stlylesheet -->
+<link type="text/css" rel="stylesheet" href="/static/css/err_page.css" />
+</head>
+<body>
+	<div layout:fragment="content">
+		<div id="notfound">
+		    <div class="notfound">
+		        <div class="notfound-404">
+		            <h1>404</h1>
+		        </div>
+		        <h2 th:text="${err_msg}"></h2>
+		        <!--<form class="notfound-search">-->
+		            <!--<input type="text" placeholder="Search...">-->
+		            <!--<button type="button">Search</button>-->
+		        <!--</form>-->
+		        <a href="/board"><span class="arrow"></span>Return To Board</a>
+		    </div>
+		</div>
+	</div>
+</body>
+</html>

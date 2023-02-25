@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layout">
+      
+<head>
+<meta charset="UTF-8">
+<title>thymeleaf sample</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        ${...} 변수 표현식 <br/>
+        <span th:text="${fruit.fruit1}"></span><br/>
+        <span th:text="${fruit.fruit2}"></span><br/>
+        <span th:text="${fruit.fruit3}"></span><br/><br/>
+    </div>
+	
+</body>
+</html>

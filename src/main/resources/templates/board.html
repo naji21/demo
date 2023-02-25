@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="common/layout">
+      
+<head>
+<meta charset="UTF-8">
+<title>게시판</title>
+<link rel="stylesheet" href="/static/css/board.css"/>
+<script src="/static/js/board.js"></script>
+</head>
+<body>
+    <div layout:fragment="content">
+    	<div class="title">게시판</div>
+    	
+    	<div class="top-bar">
+            <div>
+                <select id="category" class="swal2-select">
+                    <option value=전체보기>전체보기</option>
+                    <option th:each="list, i : ${categories}" th:value="${list.getCategoryId()}" th:text="${list.getCategoryName()}" th:selected="${selectCategory} == ${list.getCategoryId()}"></option>
+                </select>
+            </div>
+            <div>
+                <select id="list-size" class="swal2-select">
+                	<th:block th:each="num : ${#numbers.sequence(1, 6)}">
+                	<option th:value="${num * 5}" th:text="${num * 5}+'개씩 보기'" th:selected="${selectSize} == ${num * 5}"></option>
+                	</th:block>
+                </select>
+            </div>
+        </div>
+        <div class="board">
+            <table class="board">
+                <tr>
+                    <th>글번호</th>
+                    <th>제목</th>
+                    <th>작성자</th>
+                    <th>작성일</th>
+                    <th>조회</th>
+                    <th><img src="/static/img/heart_full.png"></th>
+                </tr>
+                
+                <th:block th:if="${#lists.size(boards)} == 0">
+                	<tr><td colspan="6">해당하는 게시글이 없습니다.</td></tr>
+                </th:block>
+                
+                <tr class="notice" th:each="notice, i : ${notices}">
+                    <td th:text="${notice.category.getCategoryName()}"></td>
+                    <td th:id="${notice.getBoardId()}">
+                    	<span th:text="${notice.getTitle()}"></span>
+                        <th:block th:if="${#lists.size(notice.replyList)} != 0">
+                            <span class="replies" th:text="|[${#lists.size(notice.replyList)}]|"></span>
+                        </th:block>
+                    </td>
+                    <td>
+                        <span th:text="${notice.member.getNickname()}"></span>
+                    </td>
+                    <td th:text="${#temporals.format(notice.getDate(), 'yyyy-MM-dd')}"></td>
+                    <td th:text="${notice.getViews()}"></td>
+                    <td th:text="${#lists.size(notice.likeList)}"></td>
+                </tr>
+                
+                <tr class="top_like" th:each="topLike, i : ${topLikes}">
+                    <td>추천</td>
+                    <td th:id="${topLike.getBoardId()}">
+                    	<span th:text="${topLike.getTitle()}"></span>
+                        <th:block th:if="${#lists.size(topLike.replyList)} != 0">
+                            <span class="replies" th:text="|[${#lists.size(topLike.replyList)}]|"></span>
+                        </th:block>
+                    </td>
+                    <td class="member" th:id="${topLike.member.getMemberId()}">
+                    	<th:block th:if="${topLike.member.getProfilePhoto()} != ''">
+                            <img th:src="'/member/get-profile?middlePath='+${topLike.member.getMemberId()}+'&imageFileName='+${topLike.member.getProfilePhoto()}" class="profile_photo">
+                            <!--<img id="profileL${topLikeStatus.index}" src="" class="profile_photo"/>-->
+                            <!--<input type="hidden" id="imgValueL${topLikeStatus.index}" value="${topLik.getWriterId()}:${topLike.getProfile()}"/>-->
+						</th:block>                       
+                        <span th:text="${topLike.member.getNickname()}"></span>
+                    </td>
+                    <td th:text="${#temporals.format(topLike.getDate(), 'yyyy-MM-dd')}"></td>
+                    <td th:text="${topLike.getViews()}"></td>
+                    <td th:text="${#lists.size(topLike.likeList)}"></td>
+                </tr>
+                
+                <tr class="board" th:each="board, i : ${boards}">
+                	<td th:text="${board.boardId}"></td>
+                    <td th:id="${board.getBoardId()}">
+                    	<span th:text="${board.getTitle()}"></span>
+                        <th:block th:if="${#lists.size(board.replyList)} != 0">
+                            <span class="replies" th:text="|[${#lists.size(board.replyList)}]|"></span>
+                        </th:block>
+                    </td>
+                    <td class="member" th:id="${board.member.getMemberId()}">
+                    	<th:block th:if="${board.member.profilePhoto} == '' or ${board.member.getProfilePhoto()} == null">
+                    		<img src="/static/img/null_profile.png" class="profile_photo"/>
+                    	</th:block>
+                    	<th:block th:if="${board.member.profilePhoto} != '' and ${board.member.getProfilePhoto()} != null">
+                            <img th:src="'/member/get-profile?middlePath='+${board.member.getMemberId()}+'&imageFileName='+${board.member.getProfilePhoto()}" class="profile_photo">
+                            <!--<img id="profileL${topLikeStatus.index}" src="" class="profile_photo"/>-->
+                            <!--<input type="hidden" id="imgValueL${topLikeStatus.index}" value="${topLik.getWriterId()}:${topLike.getProfile()}"/>-->
+						</th:block>                       
+                        <span th:text="${board.member.getNickname()}"></span>
+                    </td>
+                    <td th:text="${#temporals.format(board.getDate(), 'yyyy-MM-dd')}"></td>
+                    <td th:text="${board.getViews()}"></td>
+                    <td th:text="${#lists.size(board.likeList)}"></td>
+                </tr>
+            </table>
+        </div>
+        <div class="bottom-bar">
+            <div>
+                <button id="write" class="button1">글쓰기</button>
+            </div>
+            <div>
+            	<th:block th:if="${startPage} != 1">
+            		<button id="prev" class="button1" th:page="${startPage}" onclick="$.prev(this.getAttribute('page'))">이전</button>
+            	</th:block>
+            	<th:block th:each="num : ${#numbers.sequence(startPage, endPage, 1)}">
+            		<span class="page-num" th:classappend="${numStat.current} == ${curPage} ? 'cur-page'" onclick="$.reload(this.innerHTML)" th:text="|${numStat.current}|"></span>
+            	</th:block>
+            	<th:block th:if="${totalPage} > 0 and ${endPage != totalPage}">
+            		<button id="next" class="button1" th:page="${endPage}" onclick="$.next(this.getAttribute('page'))">다음</button>
+            	</th:block>
+            </div>
+        </div>
+    </div>
+	
+</body>
+</html>

@@ -1,0 +1,56 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/demo?useSSL=false&characterEncoding=UTF-8&serverTimezone=UTC
+    username: root
+    password: root
+  mvc:
+    view:
+      prefix: /WEB-INF/jsp/
+      suffix: .jsp
+    static-path-pattern: /static/**
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+  profiles:
+    include: db
+  
+  jpa:
+    show-sql: true  #P6spy와 함께, SQL 로그도 보도록 하겠습니다..! 안해주셔도 무방합니다만, P6spy가 너무 안 이쁘게 보여줘서...ㅠㅠ
+    
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQL5Dialect
+    
+    hibernate:
+      #ddl-auto: create
+      ddl-auto: none
+      
+    properties:
+      hibernate:
+        format_sql: true
+        user_sql_comments: true
+        
+        default_batch_fetch_size: 500 #배치 사이즈 (Collection 조회 최적화)
+        
+  thymeleaf:
+    cache: false
+    prefix: classpath:templates/
+    suffix: .html
+    
+logging:
+  level:
+    org:
+      apache:
+        coyote:
+          http11: debug
+
+      hiberante:
+        SQL: debug
+
+    com:
+      board:
+        demo: info

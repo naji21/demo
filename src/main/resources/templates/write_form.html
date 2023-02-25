@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="common/layout">
+      
+<head>
+<meta charset="UTF-8">
+<title>게시판</title>
+<link rel="stylesheet" href="/static/css/write_form.css"/>
+<script src="/static/js/write_form.js"></script>
+</head>
+<body>
+    <div layout:fragment="content">
+    	<div class="form">
+	        <form name="write" onsubmit="return false;">
+	            <span class="subtitle">말머리</span>
+	            <select name="category" class="swal2-select">
+	                <option th:each="category, i : ${categories}" th:value="${category.getCategoryId()}" th:text="${category.getCategoryName()}"></option>
+	            </select>
+	            <span class="subtitle">제목</span>
+	            <input name="title" class="swal2-input" placeholder="title" maxlength="60"/>
+	            <span class="subtitle">내용</span>
+	            <textarea name="content" class="swal2-textarea" placeholder="content"></textarea>
+	            <div class="btn-submit">
+	                <button id="btn-submit" class="button1">작성</button>
+	                <button id="btn-back" class="button1">취소</button>
+	            </div>
+	        </form>
+	    </div>
+    </div>
+</body>
+</html>

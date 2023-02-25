@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="common/layout">
+      
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>마이페이지 - ${mypage.nickname}</title>
+<link rel="stylesheet" href="/static/css/my_page.css"/>
+<script src="/static/js/my_page.js"></script>
+<script th:inline="javascript">
+/*<![CDATA[*/
+const isMypage = /*[[${session.loginMember == null ? false : mypage.memberId == session.loginMember.memberId}]]*/ "";
+/*]]>*/
+</script>
+</head>
+<body>
+	<div layout:fragment="content">
+		<div class="home">
+	        <button class="button1" onclick="$.home()">홈</button>
+	    </div>
+	    	    
+	    <th:block th:if="${mypage} != null">
+		    <div class="profile_info">
+		        <div class="profile_box">
+		        	<th:block th:if="${mypage.getProfilePhoto()} == '' or ${mypage.getProfilePhoto()} == null">
+		        		<img src="/static/img/null_profile.png" class="profile_photo" th:classappend="${mypage.getMemberId() == session.loginMember.getMemberId()} ? 'my_profile'" onclick="$.fileUpload()"/>
+		        	</th:block>
+		        	<th:block th:if="${mypage.getProfilePhoto()} != '' and ${mypage.getProfilePhoto()} != null">
+		        		<img th:src="|/member/get-profile?middlePath=${mypage.getMemberId()}&imageFileName=${mypage.getProfilePhoto()}|" class="profile_photo" th:classappend="${session.loginMember != null && mypage.getMemberId() == session.loginMember.getMemberId()} ? 'my_profile'" onclick="$.fileUpload()"> 
+		        	</th:block>
+		        </div>
+		        <div class="text">
+		            <div th:id="|mem${mypage.getMemberId()}|" class="nick_area" th:text="|${mypage.getNickname()} ( ${mypage.getId()} )|"></div>
+		            <div class="desc">
+		                <div>
+		                    <span class="count">총 방문<em class="num" th:text="${mypage.getAttendance()}"></em>회</span>
+		                    <span class="count">총 게시글<em class="num" th:text="${boardCount}"></em>개</span>
+		                    <span class="count">총 댓글<em class="num" th:text="${replyCount}"></em>개</span>
+		                </div>
+		                <div>
+		                    <th:block th:if="${session.loginMember != null && mypage.getMemberId() == session.loginMember.getMemberId() and mypage.getProfilePhoto() != null}">
+		                    	<span class="btn_default_profile">기본 프로필 사진으로 변경</span>
+		                    </th:block>
+		                </div>
+		            </div>
+		        </div>
+		    </div>
+	    </th:block>
+	    
+	    <div class="content_area">
+	        <div>
+	        	<span id="board" class="content_subtitle" th:classappend="${type} == 'board' ? 'selected' : 'not_selected'">>등록한 게시글</span>
+	            <span id="reply" class="content_subtitle" th:classappend="${type} != 'board' ? 'selected' : 'not_selected'">등록한 댓글</span>
+	        </div>
+	        
+	        <th:block th:if="${type} == 'board' and ${boards} != null">
+	        	<div class="content_post">
+                    <table class="board">
+                        <tr>
+                            <th>글번호</th>
+                            <th>제목</th>
+                            <th>작성일</th>
+                            <th>조회</th>
+                            <th><img src="/static/img/heart_full.png"></th>
+                        </tr>
+                        <th:block th:if="${#lists.size(boards)} == 0">
+                        	<tr><td colspan="5">작성하신 게시글이 없습니다.</td></tr>
+                        </th:block>
+                        <th:block th:each="board, i : ${boards}">
+                            <tr>
+                                <td th:text="${board.getBoardId()}"></td>
+                                <td th:id="${board.getBoardId()}" class="shortcuts">
+                                    <th:block th:if="${board.category.getCategoryName()} != '없음'">
+                                        <span class="category" th:text="|[${board.category.getCategoryName()}]|"></span>
+                                    </th:block>
+                                    <span th:text="${board.title}"></span>
+                                    <th:block th:if="${#lists.size(board.replyList)} != 0">
+                                        <span class="replies" th:text="|[${#lists.size(board.replyList)}]|"></span>
+                                    </th:block>
+                                </td>
+                                <td th:text="${#temporals.format(board.getDate(), 'yyyy-MM-dd')}"></td>
+                                <td th:text="${board.views}"></td>
+                                <td th:text="${#lists.size(board.likeList)}"></td>
+                            </tr>
+                        </th:block>
+                    </table>
+                </div>
+	        </th:block>
+	        
+	        <th:block th:if="${type} != 'board' and ${replies} != null">
+	        	<div class="content_reply">
+                    <table class="reply">
+                        <tr>
+                            <th>댓글</th>
+                            <th>작성일</th>
+                        </tr>
+                        <th:block th:if="${#lists.size(replies)} == 0">
+                            <tr><td colspan="2">작성하신 댓글이 없습니다.</td></tr>
+                        </th:block>
+                        <th:block th:each="reply, i : ${replies}">
+                        	<tr>
+                                <td th:id="${reply.board.getBoardId()}" class="shortcuts" th:text="${reply.getContent()}"></td>
+                                <td th:text="${#temporals.format(reply.getDate(), 'yyyy-MM-dd')}"></td>
+                            </tr>
+                        </th:block>
+                    </table>
+                </div>
+	        </th:block>
+	        
+	        <div class="bottom-bar">
+	            <div>
+	                <th:block th:if="${session.loginMember} != null">
+	                	<button id="write" class="button1">글쓰기</button>
+	                </th:block>
+	            </div>
+	            
+	            <div>
+	            	<th:block th:if="${startPage} != 1">
+	            		<button id="prev" class="button1" th:page="${startPage}" onclick="$.prev(this.getAttribute('page'))">이전</button>
+	            	</th:block>
+	            	<th:block th:each="num : ${#numbers.sequence(startPage, endPage, 1)}">
+	            		<span class="page-num" th:classappend="${numStat.current == curPage} ? 'cur-page'" onclick="$.reload(this.innerHTML)" th:text="${numStat.current}"></span>
+	            	</th:block>
+	            	<th:block th:if="${totalPages} > 0 and ${endPage != totalPages}">
+	            		<button id="next" class="button1" th:page="${endPage}" onclick="$.next(this.getAttribute('page'))">다음</button>
+	            	</th:block>
+	                
+	            </div>
+	        </div>
+	    </div>
+	</div>
+</body>
+</html>

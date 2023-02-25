@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title>samplefooter</title>
+</head>
+<body>
+    <div th:fragment="sampleheader">
+      <div class="login">
+      	<th:block th:if="${session.loginMember} == null">
+      		<button id="login" class="button1" onclick="$.btnClick(this)">로그인</button>
+      	</th:block>
+      	
+      	<th:block th:if="${session.loginMember} != null">
+      		<th:block th:if="${session.loginMember.getMemberId()} == 0">
+                <button id="admin" class="button1" onclick="$.btnClick(this)">관리자</button>
+      		</th:block>
+            <button id="mypage" class="button1" onclick="$.btnClick(this)">마이페이지</button>
+            <button id="logout" class="button1" onclick="$.btnClick(this)">로그아웃</button>
+		</th:block>	      
+    	</div>
+    </div>
+</body>
+</html>

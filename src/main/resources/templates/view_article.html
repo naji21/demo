@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="common/layout">
+      
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>${article.title}</title>
+<link rel="stylesheet" href="/static/css/view_article.css"/>
+<script src="/static/js/view_article.js"></script>
+</head>
+<body>
+	<div layout:fragment="content">
+	<div th:id="${article.getBoardId()}" class="article_wrap">
+		<div class="article_content_box">
+            <div class="article_header">
+                <div class="article_title">
+                    <span th:text="| ${article.title}|"><th:block th:if="${article.category != '없음'}"><span th:text="|[${article.category}]|"></span></th:block></span>
+                </div>
+                <div class="writer_info">
+                    <div>
+                        <div class="view_profile_box">
+                            <th:block th:if="${article.member.getProfilePhoto()} == '' or ${article.member.getProfilePhoto()} == null">
+                            	<img src="/static/img/null_profile.png" class="view_profile article_profile"/>
+                            </th:block>
+                            <th:block th:if="${article.member.getProfilePhoto()} != '' and ${article.member.getProfilePhoto()} != null">
+                            	<img th:src="'/member/get-profile?middlePath='+${article.member.memberId}+'&imageFileName='+${article.member.profilePhoto}" class="view_profile ">
+                            </th:block>
+                        </div>
+                        <div class="profile_area">
+                            <div class="writer_nickname">
+                                <span th:id="|m${article.member.memberId}|" class="member" th:text="${article.member.getNickname()}"></span>
+                            </div>
+                            <div class="write_time">
+                                <span th:text="${#temporals.format(article.getDate(), 'yyyy-MM-dd HH:mm:ss')}"></span>
+                            </div>
+                        </div></div>
+                    <div class="views">
+                        <span th:text="|조회수 ${article.getViews()}|"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="article_container">
+                <div class="article_viewer" th:text="${article.getContent()}"></div>
+                <div class="reply_box">
+                    <div class="like_article">
+                    	<th:block th:if="${isLike}">
+                    		<img id="on" class="heart" src="/static/img/heart_full.png">
+                    	</th:block>
+                    	<th:block th:if="!${isLike}">
+                    		<img id="off" class="heart" src="/static/img/heart_empty.png">
+                    	</th:block>
+                        <span>좋아요</span>
+                        <span id="likes" th:text="${#lists.size(article.likeList)}"></span>
+                    </div>
+                    <div class="reply_article" th:text="|댓글 ${#lists.size(article.replyList)}|"></div>
+                </div>
+                <div class="comment_box">
+                    <ul class="comment_list">
+						<th:block th:each="reply, i : ${ replyList }" th:with="parent=${reply.replyId} != ${reply.parent} ? ${reply.parent} : ${reply.replyId}">
+                            <li class="comment_item" th:classappend="${ reply.getParent() != reply.getReplyId() } ? 'comment_item_reply'+${reply.getLevel()}">
+                                <div th:id="|comment_area${reply.getReplyId()}|" class="comment_area">
+                                    <th:block th:if="${reply.member.getProfilePhoto()} == '' or ${reply.member.getProfilePhoto()} == null">
+                                        <img src="/static/img/null_profile.png" class="view_profile">
+                                    </th:block>
+                                    <th:block th:if="${reply.member.getProfilePhoto()} != '' and ${reply.member.getProfilePhoto()} != null">
+                                        <img th:src="'/member/get-profile?middlePath='+${reply.member.memberId}+'&imageFileName='+${reply.member.getProfilePhoto()}" class="view_profile">
+                                        <!--<img id="profile${status.index}" src="" class="view_profile"/>-->
+                                        <!--<input type="hidden" id="imgValue${status.index}" value="${reply.memberId}:${reply.profilePhoto}"/>-->
+                                    </th:block>
+                                    <div class="comment_content">
+                                        <div class="comment_nick_box">
+                                            <span class="comment_nickname member" th:id="|m${reply.member.getMemberId()}|" th:text="${reply.member.getNickname()}"></span>
+                                        </div>
+                                        <div class="comment_text_box">
+                                               <th:block th:if="${reply.content == 'NULL'}">
+                                                   <span class="text_comment delete_comment">삭제된 댓글입니다.</span>
+                                               </th:block>
+                                               <th:block th:if="${reply.content != 'NULL'}">
+                                                   <span class="text_comment" th:utext="${reply.content}"></span>
+                                               </th:block>
+                                        </div>
+                                        <div class="comment_info_box">
+                                            <div>
+                                                <span class="comment_info_date" th:text="${#temporals.format(reply.date, 'yyyy-MM-dd HH:mm:ss')}"></span>
+                                                <th:block th:if="${ session.loginMember != null }">
+                                                    <span th:id="|${parent} ${reply.replyId} ${reply.member.nickname}|" class="comment_info_button">답글쓰기</span>
+                                                </th:block>
+                                            </div>
+                                            <th:block th:if="${session.loginMember != null and (session.loginMember.memberId == reply.member.memberId or session.loginMember.memberId == 0)}">
+                                            <div class="comment_info_delete">
+                                                <span class="comment_delete_button" th:parent="${reply.parent}" th:reply="${reply.replyId}" onclick="deleteReply(this.getAttribute('parent'), this.getAttribute('reply'))">삭제</span>
+                                            </div>
+                                            </th:block>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+						</th:block>
+                    </ul>
+                </div>
+                <th:block th:if="${session.loginMember != null}">
+                <div class="comment_writer">
+                    <form name="commentForm" method="post" onsubmit="return false;">
+                    <div class="comment_writer_name" th:text="${session.loginMember.nickname}"></div>
+                    <textarea class="comment_write_input" placeholder="댓글을 남겨보세요" onkeydown="resize(this)"></textarea>
+                    <div class="comment_writer_button">
+                        <button class="button2" onclick="writeReply(0)">등록</button>
+                    </div>
+                    </form>
+                </div>
+                </th:block>
+            </div>
+            <div class="article_bottom_bar">
+                <div class="article_bottom_left">
+                    <button class="button1" onclick="viewBoard()">목록</button>
+                    <th:block th:if="${session.loginMember != null && article.member.memberId == session.loginMember.getMemberId()} or ${session.loginMember != null && session.loginMember.getMemberId() == 0}">
+                        <button class="button1" onclick="modifyArticle()">수정</button>
+                        <button class="button1" onclick="deleteArticle()">삭제</button>
+                    </th:block>
+                </div>
+                <div class="article_bottom_right">
+                    <th:block th:if="${current.prev != 0}">
+                    <button class="button1" th:num="${current.prev}" onclick="viewArticle(this.getAttribute('num'))">이전글</button>
+                    </th:block>
+                    <th:block th:if="${current.next != 0}">
+                    <button class="button1" th:num="${current.next}" onclick="viewArticle(this.getAttribute('num'))">다음글</button>
+                    </th:block>
+                </div>
+            </div>
+        </div>
+	</div>
+	</div>
+</body>
+</html>

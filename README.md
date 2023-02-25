@@ -1,4 +1,4 @@
-# 석주잉 게시판
+# 게시판
 
 #### Web Board with Spring boot and JPA
 - 게시판 기본 서비스 제공
@@ -10,16 +10,10 @@
   - 말머리 추가, 공지 작성(상단 노출), 회원의 글 / 댓글 삭제 등
 
 <br>
-<p align="center""><kbd><img src="/screenshot/home.png"></kbd></p>
+<p align="center""><kbd><img src="/home.png"></kbd></p>
 <br>
 
 #### 기술스택
 `Java` `Springboot` `Spring Data JPA` `MySQL` `JavaScript` `jQuery` `JSP` `Ajax` `CSS` `Git`
 
 <br>
-
-#### 프로젝트 기간
-- 2020.05.12 ~ 2020.06.03 
-
-#### 개발
-- 설계 / 백엔드 / 프론트엔드 / 퍼블리싱 : 김석중([@seokju2ng](https://github.com/seokju2ng))

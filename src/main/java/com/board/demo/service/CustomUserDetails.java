@@ -9,16 +9,18 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.board.demo.vo.Member;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 /*
 * 스프링 시큐리티가 로그인 요청을 가로채 로그인을 진행하고 완료 되면 UserDetails 타입의 오브젝트를
 * 스프링 시큐리티의 고유한 세션저장소에 저장 해준다.
 * */
+@Getter
 @AllArgsConstructor
 public class CustomUserDetails implements UserDetails {
 
-	private final Member user;
-
+	private Member user;
+	
 	@Override
 	public String getPassword() {
 		return user.getPwd();

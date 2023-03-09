@@ -4,6 +4,9 @@ import com.board.demo.repository.MemberRepository;
 import com.board.demo.util.HashFunction;
 import com.board.demo.vo.Member;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.security.NoSuchAlgorithmException;
@@ -14,6 +17,9 @@ import java.util.Optional;
 public class MemberServiceImpl implements MemberService {
     @Autowired
     private MemberRepository memberRepository;
+    
+    @Autowired
+	public PasswordEncoder passwordEncoder;
 
     @Override
     public List<Member> getList() {
@@ -22,9 +28,16 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public Member login(String id, String pwd) throws NoSuchAlgorithmException {
-        Optional<Member> loginMember = memberRepository.findByIdAndPwd(id, HashFunction.sha256(pwd));
-
+    	System.out.println(passwordEncoder.encode(pwd));
+    	
+        //Optional<Member> loginMember = memberRepository.findByIdAndPwd(id, passwordEncoder.encode(pwd));
+    	Optional<Member> loginMember = memberRepository.findById(id);
+    	
         if (!loginMember.isPresent()) {
+            return null;
+        }
+        
+        if (!passwordEncoder.matches(pwd,loginMember.get().getPwd())) {
             return null;
         }
 
@@ -46,7 +59,8 @@ public class MemberServiceImpl implements MemberService {
         return memberRepository.save(
                 Member.builder()
                 .id(id)
-                .pwd(HashFunction.sha256(pwd))
+                //.pwd(HashFunction.sha256(pwd))
+                .pwd(passwordEncoder.encode(pwd))
                 .email(email)
                 .nickname(nick)
                 .build()

@@ -1,0 +1,89 @@
+div.login {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+}
+
+div.home {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+}
+
+.button1 {
+    background:rgb(0, 0, 64);
+    color:#fff;
+    border:none;
+    position:relative;
+    height:35px;
+    font-size:1em;
+    padding:0 2em;
+    cursor:pointer;
+    transition:800ms ease all;
+    outline:none;
+}
+.button1:hover{
+    background:#fff;
+    color:rgb(0, 0, 64);
+}
+.button1:before,
+.button1:after{
+    content:'';
+    position:absolute;
+    top:0;
+    right:0;
+    height:2px;
+    width:0;
+    background: rgb(0, 0, 64);
+    transition:400ms ease all;
+}
+.button1:after{
+    right:inherit;
+    top:inherit;
+    left:0;
+    bottom:0;
+}
+.button1:hover:before,
+.button1:hover:after{
+    width:100%;
+    transition:800ms ease all;
+}
+
+.button2 {
+    background:#fff;
+    color:rgb(64, 0, 128);
+    border:none;
+    position:relative;
+    height:35px;
+    font-size:1em;
+    padding:0 2em;
+    cursor:pointer;
+    transition:800ms ease all;
+    outline:none;
+}
+.button2:hover{
+    background:rgb(0, 0, 64);
+    color:#fff;
+}
+.button2:before,
+.button2:after{
+    content:'';
+    position:absolute;
+    top:0;
+    right:0;
+    height:2px;
+    width:0;
+    background: #fff;
+    transition:400ms ease all;
+}
+.button2:after{
+    right:inherit;
+    top:inherit;
+    left:0;
+    bottom:0;
+}
+.button2:hover:before,
+.button2:hover:after{
+    width:100%;
+    transition:800ms ease all;
+}

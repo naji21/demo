@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="common/layout">
+      
+<head>
+<meta charset="UTF-8">
+<title>${mypage.nickname}님의 프로필 사진</title>
+<style>
+    body {  text-align:center;  margin: 0;  }
+    img {  max-width: 500px;  }
+</style>
+</head>
+<body>
+	<div layout:fragment="content">
+		<img th:src="|/member/get-profile?middlePath=${mypage.getMemberId()}&imageFileName=${mypage.getProfilePhoto()}|" onclick="self.close();">
+	</div>
+</body>
+</html> 

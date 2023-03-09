@@ -13,7 +13,7 @@ import java.nio.file.Paths;
 
 @Slf4j
 public class FileIO {
-    private static final String REPOSITORY_PATH = "C:/Users/Administrator/Downloads/springboot_board-master/src/main/resources/static/img/profile/";
+    private static final String REPOSITORY_PATH = "D:/repository/demo/src/main/resources/static/img/profile/";
 
     public static boolean saveImage(String folder, String filename, byte[] imgBytes) {
         File uploadPath = new File(REPOSITORY_PATH, folder);

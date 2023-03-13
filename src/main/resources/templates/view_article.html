@@ -25,7 +25,12 @@
                             	<img src="/static/img/null_profile.png" class="view_profile article_profile"/>
                             </th:block>
                             <th:block th:if="${article.member.getProfilePhoto()} != '' and ${article.member.getProfilePhoto()} != null">
-                            	<img th:src="'/member/get-profile?middlePath='+${article.member.memberId}+'&imageFileName='+${article.member.profilePhoto}" class="view_profile ">
+                            	<th:block th:if="${#strings.startsWith(article.member.getProfilePhoto(),'http')}">
+		                   			<img th:src="${article.member.getProfilePhoto()}" class="view_profile">
+		                   		</th:block>
+		                   		<th:block th:unless="${#strings.startsWith(article.member.getProfilePhoto(),'http')}">
+                            		<img th:src="'/member/get-profile?middlePath='+${article.member.memberId}+'&imageFileName='+${article.member.profilePhoto}" class="view_profile ">
+		                        </th:block>
                             </th:block>
                         </div>
                         <div class="profile_area">
@@ -65,7 +70,12 @@
                                         <img src="/static/img/null_profile.png" class="view_profile">
                                     </th:block>
                                     <th:block th:if="${reply.member.getProfilePhoto()} != '' and ${reply.member.getProfilePhoto()} != null">
-                                        <img th:src="'/member/get-profile?middlePath='+${reply.member.memberId}+'&imageFileName='+${reply.member.getProfilePhoto()}" class="view_profile">
+                                    	<th:block th:if="${#strings.startsWith(reply.member.getProfilePhoto(),'http')}">
+				                   			<img th:src="${reply.member.getProfilePhoto()}" class="view_profile">
+				                   		</th:block>
+				                   		<th:block th:unless="${#strings.startsWith(reply.member.getProfilePhoto(),'http')}">
+	                                        <img th:src="'/member/get-profile?middlePath='+${reply.member.memberId}+'&imageFileName='+${reply.member.getProfilePhoto()}" class="view_profile">
+				                        </th:block>
                                         <!--<img id="profile${status.index}" src="" class="view_profile"/>-->
                                         <!--<input type="hidden" id="imgValue${status.index}" value="${reply.memberId}:${reply.profilePhoto}"/>-->
                                     </th:block>

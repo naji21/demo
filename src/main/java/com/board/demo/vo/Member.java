@@ -40,4 +40,8 @@ public class Member implements Serializable {
 
     @Column(name = "profile_photo")
     private String profilePhoto;
+    
+    @OneToOne
+    @JoinColumn(name = "social_no", nullable = true)
+    private Social social;
 }

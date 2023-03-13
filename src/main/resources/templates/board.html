@@ -16,7 +16,6 @@
     	<div class="title">게시판</div>
     	
     	<div sec:authorize="isAuthenticated()">
-    		12312
     	</div>
     	<div class="top-bar">
             <div>
@@ -74,7 +73,12 @@
                     </td>
                     <td class="member" th:id="${topLike.member.getMemberId()}">
                     	<th:block th:if="${topLike.member.getProfilePhoto()} != ''">
-                            <img th:src="'/member/get-profile?middlePath='+${topLike.member.getMemberId()}+'&imageFileName='+${topLike.member.getProfilePhoto()}" class="profile_photo">
+                    		<th:block th:if="${#strings.startsWith(topLike.member.getProfilePhoto(),'http')}">
+                    			<img th:src="${topLike.member.getProfilePhoto()}" class="profile_photo">
+                    		</th:block>
+                    		<th:block th:unless="${#strings.startsWith(topLike.member.getProfilePhoto(),'http')}">
+                            	<img th:src="'/member/get-profile?middlePath='+${topLike.member.getMemberId()}+'&imageFileName='+${topLike.member.getProfilePhoto()}" class="profile_photo">
+                            </th:block>
                             <!--<img id="profileL${topLikeStatus.index}" src="" class="profile_photo"/>-->
                             <!--<input type="hidden" id="imgValueL${topLikeStatus.index}" value="${topLik.getWriterId()}:${topLike.getProfile()}"/>-->
 						</th:block>                       
@@ -98,7 +102,12 @@
                     		<img src="/static/img/null_profile.png" class="profile_photo"/>
                     	</th:block>
                     	<th:block th:if="${board.member.profilePhoto} != '' and ${board.member.getProfilePhoto()} != null">
-                            <img th:src="'/member/get-profile?middlePath='+${board.member.getMemberId()}+'&imageFileName='+${board.member.getProfilePhoto()}" class="profile_photo">
+                    		<th:block th:if="${#strings.startsWith(board.member.getProfilePhoto(),'http')}">
+                    			<img th:src="${board.member.getProfilePhoto()}" class="profile_photo">
+                    		</th:block>
+                    		<th:block th:unless="${#strings.startsWith(board.member.getProfilePhoto(),'http')}">
+                            	<img th:src="'/member/get-profile?middlePath='+${board.member.getMemberId()}+'&imageFileName='+${board.member.getProfilePhoto()}" class="profile_photo">
+                            </th:block>
                             <!--<img id="profileL${topLikeStatus.index}" src="" class="profile_photo"/>-->
                             <!--<input type="hidden" id="imgValueL${topLikeStatus.index}" value="${topLik.getWriterId()}:${topLike.getProfile()}"/>-->
 						</th:block>                       

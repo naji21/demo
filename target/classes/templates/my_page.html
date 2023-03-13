@@ -6,7 +6,7 @@
       
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>마이페이지 - ${mypage.nickname}</title>
+<title th:text="|마이페이지 - ${mypage.getNickname()}|"></title>
 <link rel="stylesheet" href="/static/css/my_page.css"/>
 <script src="/static/js/my_page.js"></script>
 <script th:inline="javascript">
@@ -28,7 +28,12 @@ const isMypage = /*[[${session.loginMember == null ? false : mypage.memberId == 
 		        		<img src="/static/img/null_profile.png" class="profile_photo" th:classappend="${mypage.getMemberId() == session.loginMember.getMemberId()} ? 'my_profile'" onclick="$.fileUpload()"/>
 		        	</th:block>
 		        	<th:block th:if="${mypage.getProfilePhoto()} != '' and ${mypage.getProfilePhoto()} != null">
-		        		<img th:src="|/member/get-profile?middlePath=${mypage.getMemberId()}&imageFileName=${mypage.getProfilePhoto()}|" class="profile_photo" th:classappend="${session.loginMember != null && mypage.getMemberId() == session.loginMember.getMemberId()} ? 'my_profile'" onclick="$.fileUpload()"> 
+		        		<th:block th:if="${#strings.startsWith(mypage.getProfilePhoto(),'http')}">
+                   			<img th:src="${mypage.getProfilePhoto()}" class="profile_photo">
+                   		</th:block>
+                   		<th:block th:unless="${#strings.startsWith(mypage.getProfilePhoto(),'http')}">
+		        			<img th:src="|/member/get-profile?middlePath=${mypage.getMemberId()}&imageFileName=${mypage.getProfilePhoto()}|" class="profile_photo" th:classappend="${session.loginMember != null && mypage.getMemberId() == session.loginMember.getMemberId()} ? 'my_profile'" onclick="$.fileUpload()"> 
+                        </th:block>
 		        	</th:block>
 		        </div>
 		        <div class="text">

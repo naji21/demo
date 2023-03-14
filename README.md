@@ -14,6 +14,6 @@
 <br>
 
 #### 기술스택
-`Java` `Springboot` `Spring Data JPA` `MySQL` `JavaScript` `jQuery` `JSP` `Ajax` `CSS` `Git`
+`Java` `Springboot` `Spring Data JPA` `MySQL` `JavaScript` `jQuery` `JSP` `Ajax` `CSS` `Git` `Oauth2` `JWT`
 
 <br>
